@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Q&A Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #2C3E50;
+      --secondary-color: #2980B9;
+      --accent-color: #ECF0F1;
+      --highlight-color: #1ABC9C;
+      --text-color: #2C3E50;
+      --bg-color: #F8F9F9;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    .container {
+      display: grid;
+      grid-template-columns: 220px 1fr 220px;
+      grid-template-rows: 70px 50px 1fr;
+      grid-template-areas:
+        "logo header header"
+        "nav subjects ad"
+        "nav main ad";
+      min-height: 100vh;
+    }
+    .logo {
+      grid-area: logo;
+      background-color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      color: white;
+      font-size: 22px;
+      font-weight: 600;
+    }
+    .logo a {
+      color: #ECF0F1;
+      background-color: var(--highlight-color);
+      padding: 6px 12px;
+      border-radius: 5px;
+      font-size: 14px;
+      text-decoration: none;
+    }
+    .header {
+      grid-area: header;
+      background-color: var(--primary-color);
+    }
+    .nav {
+      grid-area: nav;
+      background-color: var(--accent-color);
+      padding: 10px;
+      border-right: 1px solid #ddd;
+    }
+    .nav button {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      background-color: var(--secondary-color);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .nav button:hover {
+      background-color: var(--highlight-color);
+    }
+    .subjects {
+      grid-area: subjects;
+      background-color: var(--secondary-color);
+      color: white;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      overflow-x: auto;
+      gap: 15px;
+      font-weight: 600;
+    }
+    .subjects div {
+      padding: 10px 15px;
+      background-color: rgba(255,255,255,0.1);
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .subjects div:hover {
+      background-color: var(--highlight-color);
+    }
+    .main {
+      grid-area: main;
+      padding: 25px;
+      background-color: white;
+      border-left: 1px solid #ddd;
+    }
+    .ad {
+      grid-area: ad;
+      background-color: var(--accent-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 10px;
+      border-left: 1px solid #ddd;
+    }
+    .question-box, .answer-box {
+      background-color: #F4F6F7;
+      padding: 20px;
+      margin-bottom: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .question-box h2, .answer-box h2 {
+      color: var(--secondary-color);
+    }
+    a {
+      text-decoration: none;
+      color: var(--primary-color);
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    ol {
+      padding-left: 20px;
+    }
+    h2 {
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">
+      Student Q&A
+      <a href="student_qa_home.html">← Home</a>
+    </div>
+    <div class="header"></div>
+    <div class="nav">
+      <button onclick="loadSemester('year1sem1')">I - Year<br>SEM - 1</button>
+      <button onclick="loadSemester('year1sem2')">I - Year<br>SEM - 2</button>
+      <button onclick="loadSemester('year2sem1')">II - Year<br>SEM - 1</button>
+      <button onclick="loadSemester('year2sem2')">II - Year<br>SEM - 2</button>
+      <button onclick="loadSemester('year3sem1')">III - Year<br>SEM - 1</button>
+      <button onclick="loadSemester('year3sem2')">III - Year<br>SEM - 2</button>
+    </div>
+    <div class="subjects" id="subjectBar"></div>
+    <div class="main" id="content">
+      <p>Select a semester and subject to view questions.</p>
+    </div>
+    <div class="ad">Space for advertisement</div>
+  </div>
+
+  <script>
+    const data = {
+      year1sem1: ["Constitution", "Economics", "Political Science", "History", "Legal Studies"],
+      year1sem2: ["Sociology", "Psychology", "Ethics", "Criminology", "Environmental Law"],
+      year2sem1: ["Contract Law", "Torts", "Family Law", "Administrative Law", "IPR"],
+      year2sem2: ["Property Law", "Company Law", "Labour Law", "Tax Law", "Banking Law"],
+      year3sem1: ["Criminal Law", "CPC", "Evidence Law", "Cyber Law", "ADR"],
+      year3sem2: ["Human Rights", "International Law", "Environmental Law", "Moot Court", "Project Work"]
+    };
+
+    function loadSemester(sem) {
+      const subjects = data[sem];
+      const subjectBar = document.getElementById('subjectBar');
+      const content = document.getElementById('content');
+      subjectBar.innerHTML = '';
+      subjects.forEach(subject => {
+        const subEl = document.createElement('div');
+        subEl.textContent = subject;
+        subEl.onclick = () => loadSubject(subject);
+        subjectBar.appendChild(subEl);
+      });
+      content.innerHTML = `<p>Select a subject under <strong>${sem.replace(/year|sem/gi, ' ').toUpperCase()}</strong>.</p>`;
+    }
+
+    function loadSubject(subject) {
+      let q16 = '', q8 = '', cl = '';
+      for (let i = 1; i <= 30; i++) q16 += `<li><a href='#a16q${i}'>[16M] ${subject} Q${i}</a></li>`;
+      for (let i = 1; i <= 20; i++) q8 += `<li><a href='#a8q${i}'>[8M] ${subject} Q${i}</a></li>`;
+      for (let i = 1; i <= 25; i++) cl += `<li><a href='#cl${i}'>[Case Law] ${subject} Case ${i}</a></li>`;
+
+      document.getElementById('content').innerHTML = `
+        <div class='question-box'>
+          <h2>16 Mark Questions</h2><ol>${q16}</ol>
+          <h2>8 Mark Questions</h2><ol>${q8}</ol>
+          <h2>Case Laws</h2><ol>${cl}</ol>
+        </div>
+        <div class='answer-box'>
+          <h2>Answers</h2>
+          ${[...Array(30)].map((_, i) => `<p id='a16q${i+1}'><strong>[16M Q${i+1}]</strong> Answer for ${subject} 16M Q${i+1}</p>`).join('')}
+          ${[...Array(20)].map((_, i) => `<p id='a8q${i+1}'><strong>[8M Q${i+1}]</strong> Answer for ${subject} 8M Q${i+1}</p>`).join('')}
+          ${[...Array(25)].map((_, i) => `<p id='cl${i+1}'><strong>[Case Law ${i+1}]</strong> Case for ${subject} ${i+1}</p>`).join('')}
+        </div>`;
+    }
+  </script>
+</body>
+</html>
