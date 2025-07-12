@@ -133,6 +133,47 @@
       padding: 10px;
       border-left: 1px solid #ddd;
     }
+    .welcome-box {
+  background: #f4f9fc;
+  border: 1px solid #dce7f1;
+  padding: 30px;
+  border-radius: 12px;
+  max-width: 800px;
+  margin: 40px auto;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  font-size: 16px;
+  line-height: 1.6;
+}
+.welcome-box h1 {
+  color: var(--primary-color);
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+.welcome-box ul {
+  padding-left: 20px;
+}
+.quick-link {
+  background-color: var(--highlight-color);
+  color: white;
+  padding: 6px 12px;
+  margin-right: 8px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+}
+.quick-link:hover {
+  background-color: var(--secondary-color);
+}
+.tip-box {
+  background-color: #FFF8E1;
+  color: #444;
+  padding: 12px 15px;
+  margin-top: 25px;
+  border-left: 5px solid #FFC107;
+  border-radius: 5px;
+  font-style: italic;
+}
+
   </style>
 </head>
 
@@ -153,8 +194,22 @@
     </div>
     <div class="subjects" id="subjectBar"></div>
     <div class="main" id="content">
-      <p>Select a semester and subject to view questions.</p>
+      <div class="welcome-box">
+        <h1>📘 Welcome to the Student Q&A Portal</h1>
+        <p>This portal provides repeated university questions, case laws, and structured answers for all semesters under KSLU Law Programs.</p>
+        <ul>
+          <li>📚 16 & 8 Mark Model Questions</li>
+          <li>⚖️ 25+ Case Law Answers</li>
+          <li>📈 Topic frequency tracking since 2016</li>
+          <li>📂 Well organized by Year & Subject</li>
+        </ul>
+        <p><strong>👉 Select a semester from side bar and subject from the top bar to get started.</strong></p>
+        <div class="tip-box">
+          💡 <strong>Tip:</strong> More than 60% of 16 Mark questions are repeated since 2016. Prioritize those!
+        </div>
+      </div>
     </div>
+    
     <div class="ad">Space for advertisement</div>
   </div>
 
@@ -179,7 +234,27 @@
         subEl.onclick = () => loadSubject(subject);
         subjectBar.appendChild(subEl);
       });
-      content.innerHTML = `<p>Select a subject under <strong>${sem.replace(/year|sem/gi, ' ').toUpperCase()}</strong>.</p>`;
+      content.innerHTML = `
+  <div class="welcome-box">
+    <h1>📚 Welcome to Student Q&A Portal</h1>
+    <p>This portal helps you prepare for <strong>KSLU 3-Year Law exams</strong> with:</p>
+    <ul>
+      <li>📖 Repeated 16M & 8M Questions with Model Answers</li>
+      <li>⚖️ Case Law Analysis – Explained Clearly</li>
+      <li>🔁 Repeated Questions Tracked Since 2016</li>
+      <li>🧭 Easy Navigation by Year & Subject</li>
+    </ul>
+    <p><strong>👉 Select a subject from the top bar to get started.</strong></p>
+
+    <p>For any questions or suggestions, feel free to reach out via the contact form.</p>
+    <p>Happy studying! 🎓</p>
+
+    <div class="tip-box">
+      💡 <strong>Tip:</strong> Questions like <em>"Dower"</em>, <em>"Sources of Law"</em> have been repeated 6+ times. Prioritize these first!
+    </div>
+  </div>
+`;
+
     }
 
     function loadSubject(subject) {
