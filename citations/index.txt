@@ -6,8 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Case Law Knowledge Base</title>
 
-<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-
 <style>
 
 body{
@@ -32,12 +30,6 @@ padding:10px;
 font-size:16px;
 border-radius:6px;
 border:1px solid #ccc;
-}
-
-.result{
-margin-left:12px;
-font-size:14px;
-color:#555;
 }
 
 .container{
@@ -83,11 +75,6 @@ font-size:12px;
 margin-top:6px;
 }
 
-mark{
-background:yellow;
-padding:2px;
-}
-
 </style>
 
 </head>
@@ -100,89 +87,70 @@ Case Law Knowledge Base
 
 <input id="searchBox" class="search" placeholder="Search case / CPC / tag..." onkeyup="searchCase()">
 
-<div id="resultCount" class="result"></div>
-
 <div id="cases" class="container"></div>
 
 <script>
 
-const csvURL="https://docs.google.com/spreadsheets/d/e/2PACX-1vRjCuZ5JAhVcIs3eHEd4KCpe2LCWUj3fZIj2KjPP43kTUVrL_mnK1w-14jnrw0J5G4Lc35NDX3Fj00-/pub?output=csv";
+const sheetCSV="https://docs.google.com/spreadsheets/d/e/2PACX-1vRjCuZ5JAhVcIs3eHEd4KCpe2LCWUj3fZIj2KjPP43kTUVrL_mnK1w-14jnrw0J5G4Lc35NDX3Fj00-/pub?output=csv";
 
-let allCases=[];
+fetch(sheetCSV)
+.then(res=>res.text())
+.then(data=>{
 
-Papa.parse(csvURL,{
-download:true,
-header:true,
-complete:function(results){
-
-allCases=results.data;
-renderCases(allCases);
-
-}
-});
-
-function highlight(text,query){
-
-if(!query) return text;
-
-let regex=new RegExp(`(${query})`,"gi");
-
-return text.replace(regex,"<mark>$1</mark>");
-
-}
-
-function renderCases(data,query=""){
+let rows=data.split("\n").slice(1);
 
 let html="";
 
-data.forEach(row=>{
+rows.forEach(row=>{
+
+let c=row.split(",");
 
 html+=`
 
 <div class="card">
 
-<div class="case">${row["S.No"]}. ${highlight(row["Case Name"],query)}</div>
+<div class="case">${c[0]}. ${c[1]}</div>
 
 <div class="section">
 <span class="label">Court & Year:</span>
-<span class="value">${highlight(row["Court & Year"],query)}</span>
+<span class="value">${c[2]}</span>
 </div>
 
 <div class="section">
 <span class="label">Type of Suit:</span>
-<span class="value">${highlight(row["Type of Suit"],query)}</span>
+<span class="value">${c[3]}</span>
 </div>
 
 <div class="section">
 <span class="label">CPC Provision:</span>
-<span class="value">${highlight(row["CPC Provision"],query)}</span>
+<span class="value">${c[4]}</span>
 </div>
 
 <div class="section">
 <span class="label">Other Law / Section:</span>
-<span class="value">${highlight(row["Other Law / Section"],query)}</span>
+<span class="value">${c[5]}</span>
 </div>
 
 <div class="section">
 <span class="label">Key Legal Issue:</span>
-<span class="value">${highlight(row["Key Legal Issue"],query)}</span>
+<span class="value">${c[6]}</span>
 </div>
 
 <div class="section">
 <span class="label">Key Principle:</span>
-<span class="value">${highlight(row["Key Principle"],query)}</span>
+<span class="value">${c[7]}</span>
 </div>
 
 <div class="section">
 <span class="label">Practical Use:</span>
-<span class="value">${highlight(row["Practical Use"],query)}</span>
+<span class="value">${c[8]}</span>
 </div>
 
-<div class="tag">${highlight(row["Tag"],query)}</div>
+<div class="tag">${c[9]}</div>
 
 <div class="section">
 <span class="label">Tag Meaning:</span>
-<span class="value">${highlight(row["Tag Meaning"],query)}</span>
+<span class="value">${c[10]}</span>
 </div>
 
 </div>
@@ -192,21 +160,21 @@ html+=`
 });
 
 document.getElementById("cases").innerHTML=html;
-document.getElementById("resultCount").innerText=data.length+" cases found";
-
-}
-
-function searchCase(){
-
-let query=document.getElementById("searchBox").value.toLowerCase();
-
-let filtered=allCases.filter(row=>{
-
-return Object.values(row).join(" ").toLowerCase().includes(query);
 
 });
 
-renderCases(filtered,query);
+function searchCase(){
+
+let input=document.getElementById("searchBox").value.toLowerCase();
+let cards=document.getElementsByClassName("card");
+
+for(let i=0;i<cards.length;i++){
+
+let txt=cards[i].innerText.toLowerCase();
+
+cards[i].style.display=txt.includes(input)?"block":"none";
+
+}
 
 }
 
