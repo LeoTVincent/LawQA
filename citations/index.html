@@ -11,9 +11,9 @@
 <style>
 
 body{
-font-family:Segoe UI, Arial;
+font-family:Segoe UI,Arial;
 margin:0;
-background:#f0f4f8;
+background:#f3f6fb;
 }
 
 .header{
@@ -37,11 +37,11 @@ border:1px solid #ccc;
 .result{
 margin-left:12px;
 font-size:14px;
-color:#555;
+color:#444;
 }
 
 .container{
-padding-bottom:30px;
+padding-bottom:40px;
 }
 
 .card{
@@ -50,18 +50,19 @@ margin:12px;
 padding:16px;
 border-radius:10px;
 border-left:6px solid #b91c1c;
-box-shadow:0 3px 8px rgba(0,0,0,0.12);
+box-shadow:0 3px 8px rgba(0,0,0,0.10);
 }
 
 .case{
 font-size:18px;
 font-weight:bold;
 color:#1e3a8a;
-margin-bottom:8px;
+margin-bottom:10px;
 }
 
 .section{
-margin-top:8px;
+margin-top:6px;
+line-height:1.4;
 }
 
 .label{
@@ -80,12 +81,13 @@ color:white;
 padding:4px 8px;
 border-radius:4px;
 font-size:12px;
-margin-top:6px;
+margin-top:8px;
 }
 
 mark{
-background:yellow;
+background:#fff176;
 padding:2px;
+border-radius:2px;
 }
 
 </style>
@@ -113,25 +115,39 @@ let allCases=[];
 Papa.parse(csvURL,{
 download:true,
 header:true,
+
 complete:function(results){
 
-allCases=results.data;
+allCases = results.data.filter(row =>
+row["Case Name"] && row["Case Name"] !== "Case Name"
+);
+
 renderCases(allCases);
 
 }
+
 });
 
-function highlight(text,query){
+function safe(v){
+return v ? v : "";
+}
 
-if(!query) return text;
+function highlight(text,keywords){
 
-let regex=new RegExp(`(${query})`,"gi");
+if(!keywords.length) return text;
 
-return text.replace(regex,"<mark>$1</mark>");
+keywords.forEach(k=>{
+let regex=new RegExp(`(${k})`,"gi");
+text=text.replace(regex,"<mark>$1</mark>");
+});
+
+return text;
 
 }
 
 function renderCases(data,query=""){
+
+let keywords=query.trim().split(/\s+/).filter(Boolean);
 
 let html="";
 
@@ -141,48 +157,48 @@ html+=`
 
 <div class="card">
 
-<div class="case">${row["S.No"]}. ${highlight(row["Case Name"],query)}</div>
+<div class="case">${safe(row["S.No"])}. ${highlight(safe(row["Case Name"]),keywords)}</div>
 
 <div class="section">
 <span class="label">Court & Year:</span>
-<span class="value">${highlight(row["Court & Year"],query)}</span>
+<span class="value">${highlight(safe(row["Court & Year"]),keywords)}</span>
 </div>
 
 <div class="section">
 <span class="label">Type of Suit:</span>
-<span class="value">${highlight(row["Type of Suit"],query)}</span>
+<span class="value">${highlight(safe(row["Type of Suit"]),keywords)}</span>
 </div>
 
 <div class="section">
 <span class="label">CPC Provision:</span>
-<span class="value">${highlight(row["CPC Provision"],query)}</span>
+<span class="value">${highlight(safe(row["CPC Provision"]),keywords)}</span>
 </div>
 
 <div class="section">
 <span class="label">Other Law / Section:</span>
-<span class="value">${highlight(row["Other Law / Section"],query)}</span>
+<span class="value">${highlight(safe(row["Other Law / Section"]),keywords)}</span>
 </div>
 
 <div class="section">
 <span class="label">Key Legal Issue:</span>
-<span class="value">${highlight(row["Key Legal Issue"],query)}</span>
+<span class="value">${highlight(safe(row["Key Legal Issue"]),keywords)}</span>
 </div>
 
 <div class="section">
 <span class="label">Key Principle:</span>
-<span class="value">${highlight(row["Key Principle"],query)}</span>
+<span class="value">${highlight(safe(row["Key Principle"]),keywords)}</span>
 </div>
 
 <div class="section">
 <span class="label">Practical Use:</span>
-<span class="value">${highlight(row["Practical Use"],query)}</span>
+<span class="value">${highlight(safe(row["Practical Use"]),keywords)}</span>
 </div>
 
-<div class="tag">${highlight(row["Tag"],query)}</div>
+<div class="tag">${highlight(safe(row["Tag"]),keywords)}</div>
 
 <div class="section">
 <span class="label">Tag Meaning:</span>
-<span class="value">${highlight(row["Tag Meaning"],query)}</span>
+<span class="value">${highlight(safe(row["Tag Meaning"]),keywords)}</span>
 </div>
 
 </div>
@@ -200,9 +216,13 @@ function searchCase(){
 
 let query=document.getElementById("searchBox").value.toLowerCase();
 
+let keywords=query.trim().split(/\s+/).filter(Boolean);
+
 let filtered=allCases.filter(row=>{
 
-return Object.values(row).join(" ").toLowerCase().includes(query);
+let text=Object.values(row).join(" ").toLowerCase();
+
+return keywords.every(k=>text.includes(k));
 
 });
 
