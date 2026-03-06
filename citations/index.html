@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Case Law Knowledge Base</title>
+
+<style>
+body{
+font-family:Arial, sans-serif;
+margin:0;
+background:#f4f4f4;
+}
+
+.header{
+background:#ffd800;
+padding:15px;
+text-align:center;
+font-size:22px;
+font-weight:bold;
+}
+
+.search{
+width:92%;
+margin:10px;
+padding:10px;
+font-size:16px;
+border-radius:6px;
+border:1px solid #ccc;
+}
+
+.card{
+background:white;
+margin:10px;
+padding:14px;
+border-radius:10px;
+box-shadow:0 2px 6px rgba(0,0,0,0.1);
+}
+
+.case{
+font-size:18px;
+font-weight:bold;
+margin-bottom:8px;
+}
+
+.field{
+font-size:14px;
+margin:4px 0;
+}
+
+.tag{
+background:#eee;
+display:inline-block;
+padding:4px 7px;
+border-radius:4px;
+margin-top:6px;
+font-size:12px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+Case Law Knowledge Base
+</div>
+
+<input id="searchBox" class="search" placeholder="Search case / CPC / tag..." onkeyup="searchCase()">
+
+<div id="cases"></div>
+
+<script>
+
+const sheetCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRjCuZ5JAhVcIs3eHEd4KCpe2LCWUj3fZIj2KjPP43kTUVrL_mnK1w-14jnrw0J5G4Lc35NDX3Fj00-/pub?output=csv";
+
+fetch(sheetCSV)
+.then(response => response.text())
+.then(data => {
+
+const rows = data.split("\n").slice(1);
+
+let html = "";
+
+rows.forEach(row => {
+
+let c = row.split(",");
+
+html += `
+<div class="card">
+
+<div class="case">${c[0]}. ${c[1]}</div>
+
+<div class="field"><b>Court & Year:</b> ${c[2]}</div>
+<div class="field"><b>Type of Suit:</b> ${c[3]}</div>
+
+<div class="field"><b>CPC Provision:</b> ${c[4]}</div>
+<div class="field"><b>Other Law / Section:</b> ${c[5]}</div>
+
+<div class="field"><b>Key Legal Issue:</b> ${c[6]}</div>
+<div class="field"><b>Key Principle:</b> ${c[7]}</div>
+
+<div class="field"><b>Practical Use:</b> ${c[8]}</div>
+
+<div class="tag">${c[9]}</div>
+
+<div class="field"><b>Tag Meaning:</b> ${c[10]}</div>
+
+</div>
+`;
+
+});
+
+document.getElementById("cases").innerHTML = html;
+
+});
+
+function searchCase(){
+
+let input = document.getElementById("searchBox").value.toLowerCase();
+let cards = document.getElementsByClassName("card");
+
+for(let i=0;i<cards.length;i++){
+
+let txt = cards[i].innerText.toLowerCase();
+
+if(txt.includes(input))
+cards[i].style.display="block";
+else
+cards[i].style.display="none";
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
