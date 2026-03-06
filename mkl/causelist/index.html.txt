@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Court Cause List</title>
+
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
+<style>
+
+body{
+font-family:Segoe UI,Arial;
+margin:0;
+background:#f3f6fb;
+}
+
+.header{
+background:#1e3a8a;
+color:white;
+padding:16px;
+text-align:center;
+font-size:22px;
+font-weight:bold;
+position:sticky;
+top:0;
+z-index:1000;
+}
+
+.searchContainer{
+background:white;
+padding:10px;
+position:sticky;
+top:60px;
+z-index:999;
+box-shadow:0 2px 6px rgba(0,0,0,0.1);
+}
+
+.search{
+width:100%;
+padding:10px;
+font-size:16px;
+border-radius:6px;
+border:1px solid #ccc;
+}
+
+.result{
+margin-top:6px;
+font-size:14px;
+color:#444;
+}
+
+.card{
+background:white;
+margin:12px;
+padding:16px;
+border-radius:10px;
+border-left:6px solid #b91c1c;
+box-shadow:0 3px 8px rgba(0,0,0,0.10);
+}
+
+.case{
+font-size:17px;
+font-weight:bold;
+color:#1e3a8a;
+margin-bottom:8px;
+}
+
+.section{
+margin-top:6px;
+line-height:1.4;
+}
+
+.label{
+font-weight:bold;
+color:#b91c1c;
+}
+
+.stage{
+display:inline-block;
+background:#1e3a8a;
+color:white;
+padding:4px 8px;
+border-radius:4px;
+font-size:12px;
+margin-top:6px;
+}
+
+mark{
+background:#fff176;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+Court Cause List
+</div>
+
+<div class="searchContainer">
+
+<input id="searchBox" class="search"
+placeholder="Search party / advocate / case..."
+onkeyup="searchCase()">
+
+<div id="resultCount" class="result"></div>
+
+</div>
+
+<div id="cases"></div>
+
+<script>
+
+const csvURL="https://docs.google.com/spreadsheets/d/e/2PACX-1vQI_9xcBNvx2Pm38N5p0AvDp3zosdsRbgY8cQLUC6enncLXmvgpYx3J_aQupFKl-ne_q604KU8MgtBz/pub?output=csv";
+
+let allCases=[];
+
+Papa.parse(csvURL,{
+download:true,
+header:true,
+
+complete:function(results){
+
+allCases = results.data.filter(row =>
+row["Party Name"] && row["Party Name"] !== "Party Name"
+);
+
+renderCases(allCases);
+
+}
+
+});
+
+function safe(v){
+return v ? v : "";
+}
+
+function highlight(text,keywords){
+
+if(!keywords.length) return text;
+
+keywords.forEach(k=>{
+let regex=new RegExp(`(${k})`,"gi");
+text=text.replace(regex,"<mark>$1</mark>");
+});
+
+return text;
+
+}
+
+function renderCases(data,query=""){
+
+let keywords=query.trim().split(/\s+/).filter(Boolean);
+
+let html="";
+
+data.forEach(row=>{
+
+html+=`
+
+<div class="card">
+
+<div class="case">
+${safe(row["Serial Number"])} — ${highlight(safe(row["Party Name"]),keywords)}
+</div>
+
+<div class="section">
+<span class="label">Court:</span>
+${highlight(safe(row["06-Mar CCH"]),keywords)}
+</div>
+
+<div class="section">
+<span class="label">Case:</span>
+${highlight(safe(row["Case Type/Case Number/Case Year"]),keywords)}
+</div>
+
+<div class="section">
+<span class="label">Advocate:</span>
+${highlight(safe(row["Advocate"]),keywords)}
+</div>
+
+<div class="section">
+<span class="label">Advocate For:</span>
+${highlight(safe(row["Advocate for"]),keywords)}
+</div>
+
+<div class="section">
+<span class="label">Stage:</span>
+<span class="stage">${highlight(safe(row["Stage"]),keywords)}</span>
+</div>
+
+<div class="section">
+<span class="label">Comments:</span>
+${highlight(safe(row["Comments"]),keywords)}
+</div>
+
+</div>
+
+`;
+
+});
+
+document.getElementById("cases").innerHTML=html;
+document.getElementById("resultCount").innerText=data.length+" cases found";
+
+}
+
+function searchCase(){
+
+let query=document.getElementById("searchBox").value.toLowerCase();
+
+let keywords=query.trim().split(/\s+/).filter(Boolean);
+
+let filtered=allCases.filter(row=>{
+
+let text=Object.values(row).join(" ").toLowerCase();
+
+return keywords.every(k=>text.includes(k));
+
+});
+
+renderCases(filtered,query);
+
+}
+
+</script>
+
+</body>
+</html>
