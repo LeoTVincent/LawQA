@@ -2,19 +2,22 @@
 
 <html>
 <head>
+
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Case Law Knowledge Base</title>
 
 <style>
+
 body{
-font-family:Arial, sans-serif;
+font-family:Segoe UI, Arial;
 margin:0;
-background:#f4f4f4;
+background:#f0f4f8;
 }
 
 .header{
-background:#ffd800;
-padding:15px;
+background:#1e3a8a;
+color:white;
+padding:16px;
 text-align:center;
 font-size:22px;
 font-weight:bold;
@@ -22,40 +25,56 @@ font-weight:bold;
 
 .search{
 width:92%;
-margin:10px;
+margin:12px;
 padding:10px;
 font-size:16px;
 border-radius:6px;
 border:1px solid #ccc;
 }
 
+.container{
+padding-bottom:30px;
+}
+
 .card{
 background:white;
-margin:10px;
-padding:14px;
+margin:12px;
+padding:16px;
 border-radius:10px;
-box-shadow:0 2px 6px rgba(0,0,0,0.1);
+border-left:6px solid #b91c1c;
+box-shadow:0 3px 8px rgba(0,0,0,0.12);
 }
 
 .case{
 font-size:18px;
 font-weight:bold;
+color:#1e3a8a;
 margin-bottom:8px;
 }
 
-.field{
-font-size:14px;
-margin:4px 0;
+.section{
+margin-top:8px;
+}
+
+.label{
+font-weight:bold;
+color:#b91c1c;
+}
+
+.value{
+color:#333;
 }
 
 .tag{
-background:#eee;
 display:inline-block;
-padding:4px 7px;
+background:#1e3a8a;
+color:white;
+padding:4px 8px;
 border-radius:4px;
-margin-top:6px;
 font-size:12px;
+margin-top:6px;
 }
+
 </style>
 
 </head>
@@ -68,66 +87,92 @@ Case Law Knowledge Base
 
 <input id="searchBox" class="search" placeholder="Search case / CPC / tag..." onkeyup="searchCase()">
 
-<div id="cases"></div>
+<div id="cases" class="container"></div>
 
 <script>
 
-const sheetCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRjCuZ5JAhVcIs3eHEd4KCpe2LCWUj3fZIj2KjPP43kTUVrL_mnK1w-14jnrw0J5G4Lc35NDX3Fj00-/pub?output=csv";
+const sheetCSV="https://docs.google.com/spreadsheets/d/e/2PACX-1vRjCuZ5JAhVcIs3eHEd4KCpe2LCWUj3fZIj2KjPP43kTUVrL_mnK1w-14jnrw0J5G4Lc35NDX3Fj00-/pub?output=csv";
 
 fetch(sheetCSV)
-.then(response => response.text())
-.then(data => {
+.then(res=>res.text())
+.then(data=>{
 
-const rows = data.split("\n").slice(1);
+let rows=data.split("\n").slice(1);
 
-let html = "";
+let html="";
 
-rows.forEach(row => {
+rows.forEach(row=>{
 
-let c = row.split(",");
+let c=row.split(",");
 
-html += `
+html+=`
+
 <div class="card">
 
 <div class="case">${c[0]}. ${c[1]}</div>
 
-<div class="field"><b>Court & Year:</b> ${c[2]}</div>
-<div class="field"><b>Type of Suit:</b> ${c[3]}</div>
+<div class="section">
+<span class="label">Court & Year:</span>
+<span class="value">${c[2]}</span>
+</div>
 
-<div class="field"><b>CPC Provision:</b> ${c[4]}</div>
-<div class="field"><b>Other Law / Section:</b> ${c[5]}</div>
+<div class="section">
+<span class="label">Type of Suit:</span>
+<span class="value">${c[3]}</span>
+</div>
 
-<div class="field"><b>Key Legal Issue:</b> ${c[6]}</div>
-<div class="field"><b>Key Principle:</b> ${c[7]}</div>
+<div class="section">
+<span class="label">CPC Provision:</span>
+<span class="value">${c[4]}</span>
+</div>
 
-<div class="field"><b>Practical Use:</b> ${c[8]}</div>
+<div class="section">
+<span class="label">Other Law / Section:</span>
+<span class="value">${c[5]}</span>
+</div>
+
+<div class="section">
+<span class="label">Key Legal Issue:</span>
+<span class="value">${c[6]}</span>
+</div>
+
+<div class="section">
+<span class="label">Key Principle:</span>
+<span class="value">${c[7]}</span>
+</div>
+
+<div class="section">
+<span class="label">Practical Use:</span>
+<span class="value">${c[8]}</span>
+</div>
 
 <div class="tag">${c[9]}</div>
 
-<div class="field"><b>Tag Meaning:</b> ${c[10]}</div>
+<div class="section">
+<span class="label">Tag Meaning:</span>
+<span class="value">${c[10]}</span>
+</div>
 
 </div>
+
 `;
 
 });
 
-document.getElementById("cases").innerHTML = html;
+document.getElementById("cases").innerHTML=html;
 
 });
 
 function searchCase(){
 
-let input = document.getElementById("searchBox").value.toLowerCase();
-let cards = document.getElementsByClassName("card");
+let input=document.getElementById("searchBox").value.toLowerCase();
+let cards=document.getElementsByClassName("card");
 
 for(let i=0;i<cards.length;i++){
 
-let txt = cards[i].innerText.toLowerCase();
+let txt=cards[i].innerText.toLowerCase();
 
-if(txt.includes(input))
-cards[i].style.display="block";
-else
-cards[i].style.display="none";
+cards[i].style.display=txt.includes(input)?"block":"none";
 
 }
 
