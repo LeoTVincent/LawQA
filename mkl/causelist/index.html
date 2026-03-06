@@ -16,8 +16,6 @@ margin:0;
 background:#f4f6fb;
 }
 
-/* RED HEADER */
-
 .header{
 background:#b91c1c;
 color:white;
@@ -30,7 +28,10 @@ top:0;
 z-index:1000;
 }
 
-/* SEARCH BAR */
+.date{
+font-size:16px;
+margin-top:4px;
+}
 
 .searchContainer{
 background:white;
@@ -49,14 +50,6 @@ border-radius:6px;
 border:1px solid #ccc;
 }
 
-.result{
-margin-top:6px;
-font-size:14px;
-color:#444;
-}
-
-/* TABLE */
-
 table{
 width:95%;
 margin:20px auto;
@@ -67,8 +60,6 @@ overflow:hidden;
 box-shadow:0 3px 10px rgba(0,0,0,0.1);
 }
 
-/* TABLE HEADER */
-
 thead th{
 background:#b91c1c;
 color:white;
@@ -77,40 +68,14 @@ text-align:left;
 font-size:14px;
 }
 
-/* TABLE BODY */
-
 td{
 padding:9px;
 border-bottom:1px solid #e5e5e5;
 font-size:14px;
-vertical-align:top;
 }
 
 tr:nth-child(even){
 background:#f7f8fc;
-}
-
-tr:hover{
-background:#fff8dc;
-}
-
-/* STAGE BADGES */
-
-.stage{
-padding:4px 8px;
-border-radius:4px;
-font-size:12px;
-color:white;
-font-weight:bold;
-}
-
-.stage-evidence{background:#f59e0b;}
-.stage-argument{background:#2563eb;}
-.stage-order{background:#16a34a;}
-.stage-other{background:#6b7280;}
-
-mark{
-background:#fff176;
 }
 
 </style>
@@ -121,16 +86,13 @@ background:#fff176;
 
 <div class="header">
 Court Cause List
+<div id="causeDate" class="date"></div>
 </div>
 
 <div class="searchContainer">
-
 <input id="searchBox" class="search"
 placeholder="Search party / advocate / case..."
 onkeyup="searchCase()">
-
-<div id="resultCount" class="result"></div>
-
 </div>
 
 <table>
@@ -168,6 +130,15 @@ allCases = results.data.filter(row =>
 row["Party Name"] && row["Party Name"] !== "Party Name"
 );
 
+/* SHOW DATE FROM FIRST ROW */
+
+if(allCases.length>0){
+
+document.getElementById("causeDate").innerText =
+allCases[0]["Date"];
+
+}
+
 renderCases(allCases);
 
 }
@@ -178,64 +149,24 @@ function safe(v){
 return v ? v : "";
 }
 
-function highlight(text,keywords){
-
-if(!keywords.length) return text;
-
-keywords.forEach(k=>{
-let regex=new RegExp(`(${k})`,"gi");
-text=text.replace(regex,"<mark>$1</mark>");
-});
-
-return text;
-
-}
-
-function stageBadge(stage){
-
-let s = stage.toLowerCase();
-
-if(s.includes("evidence")) return "stage stage-evidence";
-if(s.includes("argument")) return "stage stage-argument";
-if(s.includes("order")) return "stage stage-order";
-
-return "stage stage-other";
-
-}
-
-function renderCases(data,query=""){
-
-let keywords=query.trim().split(/\s+/).filter(Boolean);
+function renderCases(data){
 
 let html="";
 
 data.forEach(row=>{
-
-let stage=safe(row["Stage"]);
 
 html+=`
 
 <tr>
 
 <td>${safe(row["Serial Number"])}</td>
-
-<td>${highlight(safe(row["06-Mar CCH"]),keywords)}</td>
-
-<td>${highlight(safe(row["Case Type/Case Number/Case Year"]),keywords)}</td>
-
-<td>${highlight(safe(row["Party Name"]),keywords)}</td>
-
-<td>${highlight(safe(row["Advocate"]),keywords)}</td>
-
-<td>${highlight(safe(row["Advocate for"]),keywords)}</td>
-
-<td>
-<span class="${stageBadge(stage)}">
-${highlight(stage,keywords)}
-</span>
-</td>
-
-<td>${highlight(safe(row["Comments"]),keywords)}</td>
+<td>${safe(row["06-Mar CCH"])}</td>
+<td>${safe(row["Case Type/Case Number/Case Year"])}</td>
+<td>${safe(row["Party Name"])}</td>
+<td>${safe(row["Advocate"])}</td>
+<td>${safe(row["Advocate for"])}</td>
+<td>${safe(row["Stage"])}</td>
+<td>${safe(row["Comments"])}</td>
 
 </tr>
 
@@ -244,7 +175,6 @@ ${highlight(stage,keywords)}
 });
 
 document.getElementById("cases").innerHTML=html;
-document.getElementById("resultCount").innerText=data.length+" cases found";
 
 }
 
@@ -252,17 +182,15 @@ function searchCase(){
 
 let query=document.getElementById("searchBox").value.toLowerCase();
 
-let keywords=query.trim().split(/\s+/).filter(Boolean);
-
 let filtered=allCases.filter(row=>{
 
 let text=Object.values(row).join(" ").toLowerCase();
 
-return keywords.every(k=>text.includes(k));
+return text.includes(query);
 
 });
 
-renderCases(filtered,query);
+renderCases(filtered);
 
 }
 

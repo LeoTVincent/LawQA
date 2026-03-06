@@ -16,8 +16,10 @@ margin:0;
 background:#f4f6fb;
 }
 
+/* RED HEADER */
+
 .header{
-background:#1e3a8a;
+background:#b91c1c;
 color:white;
 padding:16px;
 text-align:center;
@@ -28,12 +30,14 @@ top:0;
 z-index:1000;
 }
 
+/* SEARCH BAR */
+
 .searchContainer{
 background:white;
-padding:10px;
+padding:12px;
 position:sticky;
-top:60px;
-z-index:999;
+top:64px;
+z-index:900;
 box-shadow:0 2px 6px rgba(0,0,0,0.1);
 }
 
@@ -51,35 +55,59 @@ font-size:14px;
 color:#444;
 }
 
+/* TABLE */
+
 table{
-width:100%;
+width:95%;
+margin:20px auto;
 border-collapse:collapse;
-margin-top:10px;
 background:white;
+border-radius:8px;
+overflow:hidden;
+box-shadow:0 3px 10px rgba(0,0,0,0.1);
 }
 
-th{
-background:#1e3a8a;
+/* TABLE HEADER */
+
+thead th{
+background:#b91c1c;
 color:white;
 padding:10px;
 text-align:left;
 font-size:14px;
 }
 
+/* TABLE BODY */
+
 td{
-padding:8px;
-border-bottom:1px solid #ddd;
+padding:9px;
+border-bottom:1px solid #e5e5e5;
 font-size:14px;
 vertical-align:top;
 }
 
 tr:nth-child(even){
-background:#f2f4f8;
+background:#f7f8fc;
 }
 
 tr:hover{
 background:#fff8dc;
 }
+
+/* STAGE BADGES */
+
+.stage{
+padding:4px 8px;
+border-radius:4px;
+font-size:12px;
+color:white;
+font-weight:bold;
+}
+
+.stage-evidence{background:#f59e0b;}
+.stage-argument{background:#2563eb;}
+.stage-order{background:#16a34a;}
+.stage-other{background:#6b7280;}
 
 mark{
 background:#fff176;
@@ -105,7 +133,7 @@ onkeyup="searchCase()">
 
 </div>
 
-<table id="casesTable">
+<table>
 
 <thead>
 <tr>
@@ -163,6 +191,18 @@ return text;
 
 }
 
+function stageBadge(stage){
+
+let s = stage.toLowerCase();
+
+if(s.includes("evidence")) return "stage stage-evidence";
+if(s.includes("argument")) return "stage stage-argument";
+if(s.includes("order")) return "stage stage-order";
+
+return "stage stage-other";
+
+}
+
 function renderCases(data,query=""){
 
 let keywords=query.trim().split(/\s+/).filter(Boolean);
@@ -170,6 +210,8 @@ let keywords=query.trim().split(/\s+/).filter(Boolean);
 let html="";
 
 data.forEach(row=>{
+
+let stage=safe(row["Stage"]);
 
 html+=`
 
@@ -187,7 +229,11 @@ html+=`
 
 <td>${highlight(safe(row["Advocate for"]),keywords)}</td>
 
-<td>${highlight(safe(row["Stage"]),keywords)}</td>
+<td>
+<span class="${stageBadge(stage)}">
+${highlight(stage,keywords)}
+</span>
+</td>
 
 <td>${highlight(safe(row["Comments"]),keywords)}</td>
 
