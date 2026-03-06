@@ -13,7 +13,7 @@
 body{
 font-family:Segoe UI,Arial;
 margin:0;
-background:#f3f6fb;
+background:#f4f6fb;
 }
 
 .header{
@@ -51,40 +51,34 @@ font-size:14px;
 color:#444;
 }
 
-.card{
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:10px;
 background:white;
-margin:12px;
-padding:16px;
-border-radius:10px;
-border-left:6px solid #b91c1c;
-box-shadow:0 3px 8px rgba(0,0,0,0.10);
 }
 
-.case{
-font-size:17px;
-font-weight:bold;
-color:#1e3a8a;
-margin-bottom:8px;
-}
-
-.section{
-margin-top:6px;
-line-height:1.4;
-}
-
-.label{
-font-weight:bold;
-color:#b91c1c;
-}
-
-.stage{
-display:inline-block;
+th{
 background:#1e3a8a;
 color:white;
-padding:4px 8px;
-border-radius:4px;
-font-size:12px;
-margin-top:6px;
+padding:10px;
+text-align:left;
+font-size:14px;
+}
+
+td{
+padding:8px;
+border-bottom:1px solid #ddd;
+font-size:14px;
+vertical-align:top;
+}
+
+tr:nth-child(even){
+background:#f2f4f8;
+}
+
+tr:hover{
+background:#fff8dc;
 }
 
 mark{
@@ -111,7 +105,24 @@ onkeyup="searchCase()">
 
 </div>
 
-<div id="cases"></div>
+<table id="casesTable">
+
+<thead>
+<tr>
+<th>Serial</th>
+<th>Court</th>
+<th>Case Number</th>
+<th>Party Name</th>
+<th>Advocate</th>
+<th>For</th>
+<th>Stage</th>
+<th>Comments</th>
+</tr>
+</thead>
+
+<tbody id="cases"></tbody>
+
+</table>
 
 <script>
 
@@ -162,43 +173,25 @@ data.forEach(row=>{
 
 html+=`
 
-<div class="card">
+<tr>
 
-<div class="case">
-${safe(row["Serial Number"])} — ${highlight(safe(row["Party Name"]),keywords)}
-</div>
+<td>${safe(row["Serial Number"])}</td>
 
-<div class="section">
-<span class="label">Court:</span>
-${highlight(safe(row["06-Mar CCH"]),keywords)}
-</div>
+<td>${highlight(safe(row["06-Mar CCH"]),keywords)}</td>
 
-<div class="section">
-<span class="label">Case:</span>
-${highlight(safe(row["Case Type/Case Number/Case Year"]),keywords)}
-</div>
+<td>${highlight(safe(row["Case Type/Case Number/Case Year"]),keywords)}</td>
 
-<div class="section">
-<span class="label">Advocate:</span>
-${highlight(safe(row["Advocate"]),keywords)}
-</div>
+<td>${highlight(safe(row["Party Name"]),keywords)}</td>
 
-<div class="section">
-<span class="label">Advocate For:</span>
-${highlight(safe(row["Advocate for"]),keywords)}
-</div>
+<td>${highlight(safe(row["Advocate"]),keywords)}</td>
 
-<div class="section">
-<span class="label">Stage:</span>
-<span class="stage">${highlight(safe(row["Stage"]),keywords)}</span>
-</div>
+<td>${highlight(safe(row["Advocate for"]),keywords)}</td>
 
-<div class="section">
-<span class="label">Comments:</span>
-${highlight(safe(row["Comments"]),keywords)}
-</div>
+<td>${highlight(safe(row["Stage"]),keywords)}</td>
 
-</div>
+<td>${highlight(safe(row["Comments"]),keywords)}</td>
+
+</tr>
 
 `;
 
