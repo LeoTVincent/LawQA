@@ -219,7 +219,7 @@ html+=`
 
 <td>${safe(row["Serial Number"])}</td>
 
-<td>${highlight(safe(row["06-Mar CCH"]),keywords)}</td>
+<td>${highlight(safe(row["CCH"]),keywords)}</td>
 
 <td>${highlight(safe(row["Case Type/Case Number/Case Year"]),keywords)}</td>
 
