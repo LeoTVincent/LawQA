@@ -6,12 +6,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Case Law Knowledge Base</title>
 
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
 <style>
 
 body{
-font-family:Segoe UI, Arial;
+font-family:Segoe UI,Arial;
 margin:0;
-background:#f0f4f8;
+background:#f3f6fb;
 }
 
 .header{
@@ -32,8 +34,14 @@ border-radius:6px;
 border:1px solid #ccc;
 }
 
+.result{
+margin-left:12px;
+font-size:14px;
+color:#444;
+}
+
 .container{
-padding-bottom:30px;
+padding-bottom:40px;
 }
 
 .card{
@@ -42,18 +50,19 @@ margin:12px;
 padding:16px;
 border-radius:10px;
 border-left:6px solid #b91c1c;
-box-shadow:0 3px 8px rgba(0,0,0,0.12);
+box-shadow:0 3px 8px rgba(0,0,0,0.10);
 }
 
 .case{
 font-size:18px;
 font-weight:bold;
 color:#1e3a8a;
-margin-bottom:8px;
+margin-bottom:10px;
 }
 
 .section{
-margin-top:8px;
+margin-top:6px;
+line-height:1.4;
 }
 
 .label{
@@ -72,7 +81,13 @@ color:white;
 padding:4px 8px;
 border-radius:4px;
 font-size:12px;
-margin-top:6px;
+margin-top:8px;
+}
+
+mark{
+background:#fff176;
+padding:2px;
+border-radius:2px;
 }
 
 </style>
@@ -87,70 +102,103 @@ Case Law Knowledge Base
 
 <input id="searchBox" class="search" placeholder="Search case / CPC / tag..." onkeyup="searchCase()">
 
+<div id="resultCount" class="result"></div>
+
 <div id="cases" class="container"></div>
 
 <script>
 
-const sheetCSV="https://docs.google.com/spreadsheets/d/e/2PACX-1vRjCuZ5JAhVcIs3eHEd4KCpe2LCWUj3fZIj2KjPP43kTUVrL_mnK1w-14jnrw0J5G4Lc35NDX3Fj00-/pub?output=csv";
+const csvURL="https://docs.google.com/spreadsheets/d/e/2PACX-1vRjCuZ5JAhVcIs3eHEd4KCpe2LCWUj3fZIj2KjPP43kTUVrL_mnK1w-14jnrw0J5G4Lc35NDX3Fj00-/pub?output=csv";
 
-fetch(sheetCSV)
-.then(res=>res.text())
-.then(data=>{
+let allCases=[];
 
-let rows=data.split("\n").slice(1);
+Papa.parse(csvURL,{
+download:true,
+header:true,
+
+complete:function(results){
+
+allCases = results.data.filter(row =>
+row["Case Name"] && row["Case Name"] !== "Case Name"
+);
+
+renderCases(allCases);
+
+}
+
+});
+
+function safe(v){
+return v ? v : "";
+}
+
+function highlight(text,keywords){
+
+if(!keywords.length) return text;
+
+keywords.forEach(k=>{
+let regex=new RegExp(`(${k})`,"gi");
+text=text.replace(regex,"<mark>$1</mark>");
+});
+
+return text;
+
+}
+
+function renderCases(data,query=""){
+
+let keywords=query.trim().split(/\s+/).filter(Boolean);
 
 let html="";
 
-rows.forEach(row=>{
-
-let c=row.split(",");
+data.forEach(row=>{
 
 html+=`
 
 <div class="card">
 
-<div class="case">${c[0]}. ${c[1]}</div>
+<div class="case">${safe(row["S.No"])}. ${highlight(safe(row["Case Name"]),keywords)}</div>
 
 <div class="section">
 <span class="label">Court & Year:</span>
-<span class="value">${c[2]}</span>
+<span class="value">${highlight(safe(row["Court & Year"]),keywords)}</span>
 </div>
 
 <div class="section">
 <span class="label">Type of Suit:</span>
-<span class="value">${c[3]}</span>
+<span class="value">${highlight(safe(row["Type of Suit"]),keywords)}</span>
 </div>
 
 <div class="section">
 <span class="label">CPC Provision:</span>
-<span class="value">${c[4]}</span>
+<span class="value">${highlight(safe(row["CPC Provision"]),keywords)}</span>
 </div>
 
 <div class="section">
 <span class="label">Other Law / Section:</span>
-<span class="value">${c[5]}</span>
+<span class="value">${highlight(safe(row["Other Law / Section"]),keywords)}</span>
 </div>
 
 <div class="section">
 <span class="label">Key Legal Issue:</span>
-<span class="value">${c[6]}</span>
+<span class="value">${highlight(safe(row["Key Legal Issue"]),keywords)}</span>
 </div>
 
 <div class="section">
 <span class="label">Key Principle:</span>
-<span class="value">${c[7]}</span>
+<span class="value">${highlight(safe(row["Key Principle"]),keywords)}</span>
 </div>
 
 <div class="section">
 <span class="label">Practical Use:</span>
-<span class="value">${c[8]}</span>
+<span class="value">${highlight(safe(row["Practical Use"]),keywords)}</span>
 </div>
 
-<div class="tag">${c[9]}</div>
+<div class="tag">${highlight(safe(row["Tag"]),keywords)}</div>
 
 <div class="section">
 <span class="label">Tag Meaning:</span>
-<span class="value">${c[10]}</span>
+<span class="value">${highlight(safe(row["Tag Meaning"]),keywords)}</span>
 </div>
 
 </div>
@@ -160,21 +208,25 @@ html+=`
 });
 
 document.getElementById("cases").innerHTML=html;
+document.getElementById("resultCount").innerText=data.length+" cases found";
 
-});
+}
 
 function searchCase(){
 
-let input=document.getElementById("searchBox").value.toLowerCase();
-let cards=document.getElementsByClassName("card");
+let query=document.getElementById("searchBox").value.toLowerCase();
 
-for(let i=0;i<cards.length;i++){
+let keywords=query.trim().split(/\s+/).filter(Boolean);
 
-let txt=cards[i].innerText.toLowerCase();
+let filtered=allCases.filter(row=>{
 
-cards[i].style.display=txt.includes(input)?"block":"none";
+let text=Object.values(row).join(" ").toLowerCase();
 
-}
+return keywords.every(k=>text.includes(k));
+
+});
+
+renderCases(filtered,query);
 
 }
 
