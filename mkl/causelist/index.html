@@ -16,7 +16,7 @@ margin:0;
 background:#f4f6fb;
 }
 
-/* RED HEADER */
+/* HEADER */
 
 .header{
 background:#b91c1c;
@@ -36,8 +36,8 @@ z-index:1000;
 background:white;
 padding:12px;
 position:sticky;
-top:60px;
-z-index:999;
+top:64px;
+z-index:900;
 box-shadow:0 2px 6px rgba(0,0,0,0.1);
 }
 
@@ -55,7 +55,7 @@ font-size:14px;
 color:#444;
 }
 
-/* TABLE LAYOUT */
+/* TABLE */
 
 table{
 width:95%;
@@ -67,7 +67,13 @@ overflow:hidden;
 box-shadow:0 3px 10px rgba(0,0,0,0.1);
 }
 
-/* STICKY TABLE HEADER */
+/* FIXED TABLE HEADER */
+
+thead{
+position:sticky;
+top:120px;
+z-index:800;
+}
 
 thead th{
 background:#b91c1c;
@@ -75,9 +81,6 @@ color:white;
 padding:10px;
 text-align:left;
 font-size:14px;
-position:sticky;
-top:110px;
-z-index:500;
 }
 
 /* TABLE BODY */
@@ -136,7 +139,7 @@ onkeyup="searchCase()">
 
 </div>
 
-<table id="casesTable">
+<table>
 
 <thead>
 <tr>
@@ -181,7 +184,7 @@ function safe(v){
 return v ? v : "";
 }
 
-/* HIGHLIGHT SEARCH */
+/* SEARCH HIGHLIGHT */
 
 function highlight(text,keywords){
 
@@ -196,7 +199,7 @@ return text;
 
 }
 
-/* STAGE COLOR */
+/* STAGE COLORS */
 
 function stageBadge(stage){
 
