@@ -23,11 +23,22 @@ padding:16px;
 text-align:center;
 font-size:22px;
 font-weight:bold;
+position:sticky;
+top:0;
+z-index:1000;
+}
+
+.searchContainer{
+background:white;
+padding:10px;
+position:sticky;
+top:60px;
+z-index:999;
+box-shadow:0 2px 6px rgba(0,0,0,0.1);
 }
 
 .search{
-width:92%;
-margin:12px;
+width:100%;
 padding:10px;
 font-size:16px;
 border-radius:6px;
@@ -35,7 +46,7 @@ border:1px solid #ccc;
 }
 
 .result{
-margin-left:12px;
+margin-top:6px;
 font-size:14px;
 color:#444;
 }
@@ -100,9 +111,10 @@ border-radius:2px;
 Case Law Knowledge Base
 </div>
 
+<div class="searchContainer">
 <input id="searchBox" class="search" placeholder="Search case / CPC / tag..." onkeyup="searchCase()">
-
 <div id="resultCount" class="result"></div>
+</div>
 
 <div id="cases" class="container"></div>
 
@@ -159,47 +171,31 @@ html+=`
 
 <div class="case">${safe(row["S.No"])}. ${highlight(safe(row["Case Name"]),keywords)}</div>
 
-<div class="section">
-<span class="label">Court & Year:</span>
-<span class="value">${highlight(safe(row["Court & Year"]),keywords)}</span>
-</div>
+<div class="section"><span class="label">Court & Year:</span>
+<span class="value">${highlight(safe(row["Court & Year"]),keywords)}</span></div>
 
-<div class="section">
-<span class="label">Type of Suit:</span>
-<span class="value">${highlight(safe(row["Type of Suit"]),keywords)}</span>
-</div>
+<div class="section"><span class="label">Type of Suit:</span>
+<span class="value">${highlight(safe(row["Type of Suit"]),keywords)}</span></div>
 
-<div class="section">
-<span class="label">CPC Provision:</span>
-<span class="value">${highlight(safe(row["CPC Provision"]),keywords)}</span>
-</div>
+<div class="section"><span class="label">CPC Provision:</span>
+<span class="value">${highlight(safe(row["CPC Provision"]),keywords)}</span></div>
 
-<div class="section">
-<span class="label">Other Law / Section:</span>
-<span class="value">${highlight(safe(row["Other Law / Section"]),keywords)}</span>
-</div>
+<div class="section"><span class="label">Other Law / Section:</span>
+<span class="value">${highlight(safe(row["Other Law / Section"]),keywords)}</span></div>
 
-<div class="section">
-<span class="label">Key Legal Issue:</span>
-<span class="value">${highlight(safe(row["Key Legal Issue"]),keywords)}</span>
-</div>
+<div class="section"><span class="label">Key Legal Issue:</span>
+<span class="value">${highlight(safe(row["Key Legal Issue"]),keywords)}</span></div>
 
-<div class="section">
-<span class="label">Key Principle:</span>
-<span class="value">${highlight(safe(row["Key Principle"]),keywords)}</span>
-</div>
+<div class="section"><span class="label">Key Principle:</span>
+<span class="value">${highlight(safe(row["Key Principle"]),keywords)}</span></div>
 
-<div class="section">
-<span class="label">Practical Use:</span>
-<span class="value">${highlight(safe(row["Practical Use"]),keywords)}</span>
-</div>
+<div class="section"><span class="label">Practical Use:</span>
+<span class="value">${highlight(safe(row["Practical Use"]),keywords)}</span></div>
 
 <div class="tag">${highlight(safe(row["Tag"]),keywords)}</div>
 
-<div class="section">
-<span class="label">Tag Meaning:</span>
-<span class="value">${highlight(safe(row["Tag Meaning"]),keywords)}</span>
-</div>
+<div class="section"><span class="label">Tag Meaning:</span>
+<span class="value">${highlight(safe(row["Tag Meaning"]),keywords)}</span></div>
 
 </div>
 
