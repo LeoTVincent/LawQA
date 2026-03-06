@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MKL Legal Dashboard</title>
+
+<style>
+
+body{
+font-family:Segoe UI,Arial;
+margin:0;
+background:#f4f6fb;
+text-align:center;
+}
+
+/* HEADER */
+
+.header{
+background:#b91c1c;
+color:white;
+padding:22px;
+font-size:26px;
+font-weight:bold;
+}
+
+/* BUTTON AREA */
+
+.container{
+margin-top:70px;
+}
+
+/* BUTTON STYLE */
+
+.button{
+display:block;
+width:280px;
+margin:22px auto;
+padding:18px;
+font-size:18px;
+border-radius:8px;
+border:none;
+cursor:pointer;
+color:white;
+transition:0.2s;
+}
+
+/* BUTTON COLORS */
+
+.causelist{
+background:#16a34a;
+}
+
+.citations{
+background:#2563eb;
+}
+
+.button:hover{
+transform:scale(1.03);
+opacity:0.95;
+}
+
+.footer{
+margin-top:60px;
+font-size:14px;
+color:#666;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+MKL Legal Dashboard
+</div>
+
+<div class="container">
+
+<button class="button causelist"
+onclick="location.href='causelist/'">
+Daily Court Cause List </button>
+
+<button class="button citations"
+onclick="location.href='citations/'">
+Case Citations Research </button>
+
+</div>
+
+<div class="footer">
+LawQA Knowledge System
+</div>
+
+</body>
+
+</html>
