@@ -12,7 +12,7 @@ body{
 font-family:Segoe UI,Arial;
 margin:0;
 background:#f4f6fb;
-text-align:center;
+color:#333;
 }
 
 /* HEADER */
@@ -21,50 +21,100 @@ text-align:center;
 background:#b91c1c;
 color:white;
 padding:22px;
+text-align:center;
 font-size:26px;
 font-weight:bold;
 }
 
-/* BUTTON AREA */
+/* HERO SECTION */
 
-.container{
-margin-top:70px;
+.hero{
+text-align:center;
+padding:40px 20px 30px 20px;
 }
 
-/* BUTTON STYLE */
+.hero h1{
+margin:0;
+font-size:28px;
+color:#1e3a8a;
+}
 
-.button{
-display:block;
-width:280px;
-margin:22px auto;
-padding:18px;
-font-size:18px;
-border-radius:8px;
-border:none;
+.hero p{
+margin-top:10px;
+font-size:16px;
+color:#555;
+max-width:700px;
+margin-left:auto;
+margin-right:auto;
+line-height:1.6;
+}
+
+/* DASHBOARD GRID */
+
+.container{
+max-width:1000px;
+margin:40px auto;
+padding:10px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+gap:20px;
+}
+
+/* CARD BUTTONS */
+
+.card{
+background:white;
+border-radius:10px;
+padding:25px;
+text-align:center;
+box-shadow:0 3px 10px rgba(0,0,0,0.08);
 cursor:pointer;
-color:white;
 transition:0.2s;
 }
 
-/* BUTTON COLORS */
+.card:hover{
+transform:translateY(-4px);
+box-shadow:0 6px 18px rgba(0,0,0,0.15);
+}
+
+/* CARD COLORS */
 
 .causelist{
-background:#16a34a;
+border-top:5px solid #16a34a;
 }
 
 .citations{
-background:#2563eb;
+border-top:5px solid #2563eb;
 }
 
-.button:hover{
-transform:scale(1.03);
-opacity:0.95;
+.future{
+border-top:5px solid #b91c1c;
+opacity:0.75;
 }
+
+/* CARD TEXT */
+
+.card h3{
+margin:10px 0 5px 0;
+font-size:20px;
+color:#1e3a8a;
+}
+
+.card p{
+font-size:14px;
+color:#666;
+}
+
+/* FOOTER */
 
 .footer{
 margin-top:60px;
+padding:20px;
+background:white;
+text-align:center;
 font-size:14px;
 color:#666;
+border-top:1px solid #ddd;
 }
 
 </style>
@@ -77,20 +127,62 @@ color:#666;
 Adv. MK Lokesha Legal Dashboard
 </div>
 
+<div class="hero">
+
+<h1>LawQA Knowledge System</h1>
+
+<p>
+A personal legal research and case management dashboard designed to quickly access
+court cause lists, case law citations, and legal knowledge references.
+Future modules will include case diary, ready reference notes,
+and litigation history tracking.
+</p>
+
+</div>
+
 <div class="container">
 
-<button class="button causelist"
+<div class="card causelist"
 onclick="location.href='causelist/'">
-Daily Court Cause List </button>
 
-<button class="button citations"
+<h3>Daily Court Cause List</h3>
+
+<p>
+View and search daily court cause lists from the system.
+Quickly find your cases and stage of hearing.
+</p>
+
+</div>
+
+<div class="card citations"
 onclick="location.href='citations/'">
-Case Citations Research </button>
+
+<h3>Case Law Citations</h3>
+
+<p>
+Search and review important case laws with CPC provisions,
+legal principles, and practical usage.
+</p>
+
+</div>
+
+<div class="card future">
+
+<h3>Case Ready Reference</h3>
+
+<p>
+Future module to track case facts, filing history,
+vakalath submission, and important dates.
+</p>
+
+</div>
 
 </div>
 
 <div class="footer">
-LawQA Knowledge System
+
+© 2026 Adv. MK Lokesha • LawQA Knowledge System
+
 </div>
 
 </body>
