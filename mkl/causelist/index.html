@@ -16,6 +16,8 @@ margin:0;
 background:#f4f6fb;
 }
 
+/* HEADER */
+
 .header{
 background:#b91c1c;
 color:white;
@@ -32,6 +34,24 @@ z-index:1000;
 font-size:16px;
 margin-top:4px;
 }
+
+/* BACK BUTTON */
+
+.nav{
+padding:10px;
+}
+
+.homeBtn{
+background:#1e3a8a;
+color:white;
+border:none;
+padding:8px 14px;
+border-radius:6px;
+cursor:pointer;
+font-size:14px;
+}
+
+/* SEARCH */
 
 .searchContainer{
 background:white;
@@ -50,8 +70,18 @@ border-radius:6px;
 border:1px solid #ccc;
 }
 
+/* TABLE WRAPPER (MOBILE FIX) */
+
+.tableWrap{
+width:100%;
+overflow-x:auto;
+}
+
+/* TABLE */
+
 table{
 width:95%;
+min-width:900px;
 margin:20px auto;
 border-collapse:collapse;
 background:white;
@@ -89,11 +119,17 @@ Court Cause List
 <div id="causeDate" class="date"></div>
 </div>
 
+<div class="nav">
+<button class="homeBtn" onclick="location.href='../'">← Home</button>
+</div>
+
 <div class="searchContainer">
 <input id="searchBox" class="search"
 placeholder="Search party / advocate / case..."
 onkeyup="searchCase()">
 </div>
+
+<div class="tableWrap">
 
 <table>
 
@@ -114,6 +150,8 @@ onkeyup="searchCase()">
 
 </table>
 
+</div>
+
 <script>
 
 const csvURL="https://docs.google.com/spreadsheets/d/e/2PACX-1vQI_9xcBNvx2Pm38N5p0AvDp3zosdsRbgY8cQLUC6enncLXmvgpYx3J_aQupFKl-ne_q604KU8MgtBz/pub?output=csv";
@@ -129,8 +167,6 @@ complete:function(results){
 allCases = results.data.filter(row =>
 row["Party Name"] && row["Party Name"] !== "Party Name"
 );
-
-/* SHOW DATE FROM FIRST ROW */
 
 if(allCases.length>0){
 
